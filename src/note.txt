@@ -1,0 +1,132 @@
+1. Khoi tao project node js
+npm init
+
+- Tao file src/index.js
+    const express = require('express');
+    const app = express();
+    const port = 3000;
+
+    app.get('/', (req, res) => {
+        res.send('Homepage');
+    })
+
+    app.listen(port, () => {
+        console.log(`Example app listening at http://localhost:${port}`)
+    })
+
+2. cai dat cac package can thiet
+
+    npm install --save express
+
+- Cai dat package vao devDependencies
+    npm install --save-dev nodemon 
+        Sau khi cai dat nodemon thi can sua lai file package.json de nhan nodemon 
+            start": "nodemon --inspect src/index.js"
+        Khoi dong server: 
+            npm run start    
+    npm install --save-dev morgan
+        Sau khi cai morgan thi can them vao file src/index.js
+        const morgan = require('morgan');
+        ...
+        // HTTP logger
+        app.use(morgan('combined'));
+ 
+        Sau moi request thi http log se duoc show ra de debug 
+
+    Cac packages nam trong devDependencies se khong duoc su dung tren moi truong production => giam source, toi uu hieu nang
+    => cac packages chi phuc vu trong qua trinh dev => chi nen cai vao devDependencies
+
+3. Cai dat va su dung template engine (handlebars)
+    npm install --save express-handlebars
+
+    - sua file src/index.js 
+        const { engine } = require('express-handlebars');
+
+        // Template engine (extname: 'hbs': doi dinh dang file tu handlebars thanh hbs)
+        app.engine('hbs', engine({extname: 'hbs'}));
+        app.set('view engine', 'hbs');
+        app.set('views', path.join(__dirname, 'resources/views'));
+
+    - Sua file src/index.js va them vao route /home
+        app.get('/home', (req, res) => {
+            res.render('home');     // Tim den file resources/views/home.hbs
+        })
+    - Tao folder resources/views
+        Tao file home.hbs chua noi dung phan content (body) cho trang homepage
+    - Tao layout cho engine trong thu muc resources/views/layouts
+        Tao file main.hbs
+            <!DOCTYPE html>
+                <html lang="en">
+
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Document</title>
+                </head>
+
+                <body>
+                    <div class="app">
+                    <!-- nap partial layout header tu src/resources/views/partials -->
+                        {{>header}}
+                        <div class="container">
+                        <!-- Noi dung file home.hbs se duoc chen vao phan body nay -->
+                            {{{body}}}
+                        </div>
+                        <!-- nap partial layout header tu src/resources/views/partials -->
+                        {{>footer}}
+                    </div>
+                </body>
+
+                </html>
+    - partials: 
+        - footer.hbs
+        - header.hbs
+    
+    **** Note:
+        Mac dinh neu ko truyen layout vao ham render thi template engine se tim layout main de render. 
+        Neu muon dung layout khac cho tung trang can truyen them layout vao
+        /** route */
+        // Dung layout home cho trang homepage
+        app.get('/', (req, res) => {
+            res.render('home', { layout: 'home' });
+        })
+
+        // Khong khai bao gi mac dinh dung layout main. Neu ko co thi se bao loi
+        app.get('/news', (req, res) => {
+            res.render('news')
+        })
+
+    - Ngoai ra co the truyen data, helpers, ... vao template engine de dieu khien cung nhu hien thi du lieu dong
+
+4. Static file and SCSS
+4. 1. Khai bao static files - noi chua cac file static nhu anh, ....
+    trong file src/index.js them dong sau: 
+    app.use(express.static(path.join(__dirname, 'public')))
+    khi do vao url go: http://localhost:3000/imgs/logo.png se show ra anh
+    blog\src\public\imgs\logo.png
+
+4.2 SCSS
+    cai dat scss vao devDependencies de su dung trong qua trinh dev, con len production thi no se duoc compile sang class
+    npm install --save-dev node-sass
+
+    cac file scss se duoc de trong thu muc resources/scss 
+    - tao file app.scss
+
+    Tuy nhien website se khong doc duoc file scss the nen can phai convert sang file css va de trong src/public/css.
+    - Cau hinh de sau khi chay lenh thi se conver tu file scss sang file css 
+        + them dong nay vao file package.json
+        "watch": "node-sass --watch src/resources/scss/ --output src/public/css/",
+        Sau do chay lenh: npm run watch: thi no se tu dong combile scss src/resources/scss/app.scss sang css src/public/css/app.css nhu trong config.
+        tham so: --watch la de no tu dong combile cho den khi tat command di ma ko can chay lenh nhieu lan
+    
+    - Luu y: khong bao gio viet code thang vao src/public/css/app.css ma chi thay doi code trong 
+    src/resources/scss/app.scss sau do combine sang file css
+
+    - Sau do chi can link file css vao trong header cua layout la duoc
+    <link rel="stylesheet" href="css/app.css">
+
+    - Hoc them ve sass nhe
+    VD: tao file src/resources/scss/_variables.scss de chua cac bien
+    sau do import vao file src/resources/scss/app.scss 
+
+5. Use Bootstrap 4
