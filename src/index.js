@@ -8,8 +8,13 @@ const path = require('path');
 // Static content 
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(express.urlencoded({
+    extended: true
+}));
+app.use(express.json());
+
 // HTTP logger
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 // Template engine
 app.engine('hbs', engine({
@@ -28,6 +33,21 @@ app.get('/home', (req, res) => {
 
 app.get('/news', (req, res) => {
     res.render('news')
+})
+
+app.get('/search', (req, res) => {
+    res.render('search')
+})
+
+app.get('/result', (req, res) => {
+    console.log(req.query.keyword)
+    res.render('result', { data: req.query.keyword })
+});
+
+app.post('/search', (req, res) => {
+    console.log(req.body);
+    res.send('search')
+    // res.render('search') 
 })
 
 app.listen(port, () => {

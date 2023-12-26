@@ -130,3 +130,36 @@ npm init
     sau do import vao file src/resources/scss/app.scss 
 
 5. Use Bootstrap 4
+https://getbootstrap.com/docs/4.0/getting-started/introduction/
+- add các file css và js vào file src/resources/views/layouts/home.hbs...
+- Lưu ý: các file js không nên add vào thẻ head như css mà add vào cuối thẻ body (trước khi đóng thẻ body) để tối ưu hiệu năng.
+có thể tìm hiểu thêm 1 số option: async, defer 
+    + async: chỉ thị load file js không đồng bộ cùng với việc load html của trang
+    + defer: chỉ thị load file js sau khi các mã html đã được load xong 
+
+- Sử dụng các component của Bootstrap để hiển thị nội dung phù hợp.
+
+6. Basic Routing
+    https://expressjs.com/en/starter/basic-routing.html
+
+7. Query Parameters
+http://localhost:3000/search?q=toi%20dang%20search&page=2
+
+- Lấy tham số từ url thì dùng: req.query
+    req.query.q     // toi dang search
+    req.query.page  // 2
+
+8. POST METHOD
+- Để lấy dữ liệu submit qua phương thức POST thì dùng req.body thay vì req.query như phương thức GET.
+- do express đã hỗ trợ sẵn middleware để xử lý Query Parameters rồi nên khi console log query nó sẽ ra luôn dữ liệu console.log(req.query). Còn console.log(req.body) ra undefined vì express chưa hỗ trợ sẵn. 
+=> cần khai báo bodyParser vào mới lấy được.
+    // Cho phép lấy dữ liệu từ form post lên
+    app.use(express.urlencoded({
+        extended:true
+    }));
+
+    // Lấy dữ liệu từ client đẩy lên dạng json: XMLHttpRequest, fetch, axios, ajax, ... 
+    app.use(express.json());
+
+*** Note: Từ express 1.16 đã hỗ trợ sẵn body-parser rồi nên chỉ cần khai báo là được.
+TH dùng express cũ hơn thì cần cài đặt package này mới dùng được.
