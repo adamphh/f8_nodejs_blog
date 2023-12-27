@@ -163,3 +163,26 @@ http://localhost:3000/search?q=toi%20dang%20search&page=2
 
 *** Note: Từ express 1.16 đã hỗ trợ sẵn body-parser rồi nên chỉ cần khai báo là được.
 TH dùng express cũ hơn thì cần cài đặt package này mới dùng được.
+
+9. MVC
+9.1 routes
+    - Tạo thư mục routes để chứa các route cho ứng dụng
+    - Trong thư mục routes tạo file news.route để khai báo các route cho mục news
+    - Tạo file index.js và import news.route vào
+    - Nhớ export ra để file khác có thể gọi và sử dụng
+***** Chú ý: 
+        - route sẽ đọc từ trên xuống dưới. nếu để  / ở trên /:slug thì khi chạy nó sẽ đọc được / và chạy luôn thay vì chạy /:slug. Vì vậy cần phải để /:slug lên trước /
+        - Đối với một số trang không nằm trong danh mục nào cả (VD: homepage, search, contact,...) thì tạo cho nó 1 route riêng  (site.route)
+
+
+9.2 app/controllers
+    - Các controllers
+    - Tạo file news.controller để khai báo các controller cho mục news
+    - Có thể khai báo class hoặc là function riêng lẻ
+    - Nhớ export ra để router còn sử dụng
+
+9.3 Sử lại file src/index.js để  gọi đến router
+const route = require('./routes');
+...
+route(app);
+- comment các  routes đã test trước đó
