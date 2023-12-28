@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// const getNews = require('../app/controllers/news.controllers');  
+// const getNews = require('../app/controllers/news.controllers');
 const sitesController = require('../app/controllers/sites.controllers');
 
 router.use('/contact', sitesController.getContact);

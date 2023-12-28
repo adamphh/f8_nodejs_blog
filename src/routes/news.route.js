@@ -13,5 +13,4 @@ router.use('/:slug', newsController.showNews);
 
 router.use('/', newsController.getNews);
 
-
 module.exports = router;

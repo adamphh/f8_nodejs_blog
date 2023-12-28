@@ -6,9 +6,7 @@
 // module.exports = getNews;
 
 class NewsController {
-    constructor() {
-
-    };
+    constructor() { }
 
     getNews(req, res) {
         return res.render('news');
@@ -19,4 +17,4 @@ class NewsController {
         return res.send('news details');
     }
 }
-module.exports = new NewsController;
+module.exports = new NewsController();

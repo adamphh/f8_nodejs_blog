@@ -186,3 +186,42 @@ const route = require('./routes');
 ...
 route(app);
 - comment các  routes đã test trước đó
+
+10. Prettier - lint-staged - husky
+    Install vào devDependencies
+        npm install --save-dev prettier lint-staged husky
+10.1 Prettier
+    https://github.com/prettier/prettier
+    - Đối với javascript thì có package prettier cho phép tự động format lại code cho đẹp hơn
+    - Kết hợp với 2 package khác là lint-staged và husky cho phép format code trước khi commit code lên git theo tieu chuan chung 
+    - Có the cấu hình để thay đổi tiêu chuẩn của prettier  nếu muốn nhưng ko recommend
+    - Thêm cấu hình vào file package.json
+        "format": "prettier --single-quote --trailing-comma all --tab-width 4 --write 'src/**/*.{js,json,scss}'"
+        Xem thêm config format code trên trang chủ
+    - Sau đó mỗi lần muốn format thì chạy lệnh: 
+        npm run format 
+    - Nếu cấu hình lint-staged thì đổi lại config trong script như sau: 
+        "format": "lint-staged"
+
+10.2 lint-staged
+    cho phép chạy một command trên những files đã được add vào git ( đã được git staged)
+    - Add code vào file package.json    
+        {
+            "lint-staged": {
+                '*': "your-cmd" 
+            }
+        }
+    - sửa lại phần script của format để gọi đến lint-staged
+        "format": "lint-staged"
+    - Sau khi gọi git add và chạy npm run format thì nó sẽ tự reformat
+
+10.3. husky 
+    Cung cấp cho chúng ta những cái hooks để bắt những hành vi (action) của git (commit,...)
+    - Như ở trên, sau khi gọi git add rồi vẫn phải chạy lệnh manually npm run format. 
+    Bây giờ sử dụng huskey để tự động reformat after chạy lệnh git commit.
+    - Thêm cấu hình husky vào file package.json
+        "husky": {
+            "hooks": {
+                "pre-commit": "lint-staged"
+            }
+        },
