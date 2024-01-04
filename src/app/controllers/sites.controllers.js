@@ -1,10 +1,19 @@
 const Course = require('../models/courses.model');
+const utilMongoose = require('../../util/mongoose');
 
 class SitesController {
     async getHomePage(req, res, next) {
-        const courses = await Course.find({});
-
-        res.json(courses);
+        try {
+            let courses = await Course.find({});
+            if (courses) {
+                courses = utilMongoose.processMongooseListToObject(courses);
+                res.render('home', { layout: 'home', coursesData: courses });
+            }
+            // res.render('home', { layout: 'home', coursesData: courses });
+            // res.json(courses);
+        } catch (err) {
+            next(err);
+        }
         // res.send('You are staying in Homepage');
     }
 

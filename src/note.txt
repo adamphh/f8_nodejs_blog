@@ -37,6 +37,7 @@ npm init
     => cac packages chi phuc vu trong qua trinh dev => chi nen cai vao devDependencies
 
 3. Cai dat va su dung template engine (handlebars)
+https://handlebarsjs.com/guide/#what-is-handlebars
     npm install --save express-handlebars
 
     - sua file src/index.js 
@@ -294,3 +295,30 @@ Minh ko cai cho do nang chrome
     ham path.join() co the nhan nhieu doi so de join vao voi nhau
     => thay vi viet path.join(__dirname, 'resources/views') (co dinh / cho window. nhung linux lai la \) 
     thi ta dung: path.join(__dirname, 'resources', 'views'). Nhu vay thi path no se tu dung dau / phu hop voi linux va window
+
+13. CURD from Database
+13.1: Read and render a list courses in the homepage
+- study synctax to render a list of handlebars template in https://handlebarsjs.com/guide/#block-helpers
+- from handlebars v4.6.x, you cannot access to the attributes of the object directly from controller. 
+VD: {{#each courses}}
+    {{this.name}}
+{{/each}}
+- To fix this problem, you need to process the data from mongoose before render 
+    + write function to process data from mongoose in util/mongoose.js
+        const processMongooseListToObject = (mongooseArray) => {
+            return mongooseArray.map(item => item.toObject());
+        }
+
+        const processMongooseDetailToObject = (mongooseDetail) => {
+            return mongooseDetail.toObject();
+        }
+
+        module.exports = {
+            processMongooseListToObject,
+            processMongooseDetailToObject
+        }
+    + call the function before render
+        const utilMongoose = require('../../util/mongoose');
+        ...
+        courses = utilMongoose.processMongooseListToObject(courses);
+        res.render('home', { layout: 'home', coursesData: courses });
