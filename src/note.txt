@@ -225,3 +225,72 @@ route(app);
                 "pre-commit": "lint-staged"
             }
         },
+
+11. Xây dưng model cho ứng dụng
+- Mở Mongodb Compass và connect to Mongodb
+- Tạo database f8_edu_dev, collection: courses
+- Mongodb không phải là hệ cơ sở dữ liệu quan hệ, nó là document database. Lưu trữ dữ liệu dưới dạng tài liệu
+    Collection tương ứng table,
+    document tương ứng với record
+- Trong collection thi cau truc cac document co the khac nhau chu khong co dinh nhu trong mysql. 
+VD: document 1: {name: name1, description: description1}
+document 2: {name: name2, description: description2, title: title2}
+    
+11.1 Install thư viện mongoose 
+    https://github.com/Automattic/mongoose
+    npm install --save mongoose
+11.2 Connect to Mongodb server
+    - xem file config/db/index.js
+    const mongoose = require('mongoose');
+
+    async function connect() {
+        try {
+            await mongoose.connect('mongodb://127.0.0.1:27017/f8_edu_dev');
+        } catch (e) {}
+    }
+Nho export module
+    module.exports = {connect}    
+11.3 Xây dựng model (defining a model)
+    - xem file models/courses.model.js
+
+    const mongoose = require('mongoose');
+    const schema = mongoose.schema;    
+
+    const Course = new schema({
+        name: { type: String, minLenth: 3, maxLength: 160, required: true },
+    description: { type: String, default: '', maxLength: 600, required: false },
+    image: { type: String, default: '', required: false },
+    createdAt: { type: Date, default: new Date() },
+    updatedAt: { type: Date, default: new Date() },
+    })
+
+module.exports = mongoose.model('Course', Course);
+
+11.4. Accessing a Model (lay list du lieu)
+    - xem file app/controllers/sites.controller
+    const CourseModel = require('../models/course.model');
+
+    async getHomePage(req, res, next) {
+        // Get list of courses
+        const CourseModel = await CourseModel.find({});
+
+        // Get course by index
+        const instance = await CourseModel.findOne({ });
+        .......
+    }
+
+12. Restructure code and install JSON viewer
+12.1 JSON viewer
+Cai chrome extension de view json. Cai cung duoc ma khong cai cung khong sao.
+Minh ko cai cho do nang chrome
+
+12.2 Route METHOD
+    - Trong file routes/index.js thi su dung app.use()
+    - Con cac file routes khac (news.route, sites.route) thi dung phuong thuc xac dinh luon
+    VD: app.get()
+        app.post()
+
+12.3 Resource Path
+    ham path.join() co the nhan nhieu doi so de join vao voi nhau
+    => thay vi viet path.join(__dirname, 'resources/views') (co dinh / cho window. nhung linux lai la \) 
+    thi ta dung: path.join(__dirname, 'resources', 'views'). Nhu vay thi path no se tu dung dau / phu hop voi linux va window
