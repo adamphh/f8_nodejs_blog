@@ -322,3 +322,34 @@ VD: {{#each courses}}
         ...
         courses = utilMongoose.processMongooseListToObject(courses);
         res.render('home', { layout: 'home', coursesData: courses });
+
+13.2 View cource details
+- lay slug tu url (phuong thuc get)
+    slug = req.params.slug
+- Tim document dua vao slug
+    let course = await Course.findOne({ slug: slug });
+- Xu ly du lieu va render course details
+    if (course && course.name) {
+        course = processMongooseDetailToObject(course);
+        res.render('courses/view', { course: course });
+    }
+
+13.3 Tao moi 1 document
+    - Tao router /courses/create de hien thi form.
+    - Tao template views/courses/create.hbs va tao form de dien du lieu
+    - Khai bao lai model course (cac file can luu thi bat buoc khai bao trong model schema)
+        + timestamps: true => tu dong tao ra fields: created_at va updated_at
+        + slug: tu dong tao ra tu field name (thong qua plugin: mongoose-slug-generator)
+    - Xu ly du lieu va save vao database
+        const formData = req.body;
+        const image = `https://img.youtube.com/vi/${formData.videoId}/sddefault.jpg`;
+        formData.image = image;
+        
+        // Tao ra Model moi
+        const course = new Course(formData);
+        // Save model vao db
+        const result = await course.save();
+        if (result) {
+            // Redirect ve trang chu
+            res.redirect('/');
+        }

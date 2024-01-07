@@ -1,0 +1,15 @@
+<h1>Course Details</h1>
+<div class="mt-4">
+    <div class="row">
+        <div class="col-lg-3">
+            <button class="btn btn-primary">Hoc ngay</button>
+        </div>
+        <div class=" col-lg-9">
+            <h2>{{course.name}}</h2>
+            <p><img src="{{course.image}}" /></p>
+            <p>{{course.description}}</p>
+
+            <button class="btn btn-primary" (click)="edit()">Edit</button>
+        </div>
+    </div>
+</div>
